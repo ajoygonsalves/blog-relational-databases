@@ -8,12 +8,12 @@ import {
 } from "../controllers/blogs";
 import blogFinder from "../middleware/blogFinder";
 
-const router = Router();
+const blogRouter = Router();
 
-router.get("/", getBlogs);
-router.get("/:id", blogFinder, getBlogById);
-router.post("/", createBlog);
-router.delete("/:id", blogFinder, deleteBlog);
-router.put("/:id/likes", blogFinder, updateBlogLikes);
+blogRouter.get("/", getBlogs);
+blogRouter.get("/:id", blogFinder, getBlogById);
+blogRouter.post("/", createBlog);
+blogRouter.delete("/:id", blogFinder, deleteBlog);
+blogRouter.put("/:id/likes", blogFinder, updateBlogLikes);
 
-export default router;
+export default blogRouter;
