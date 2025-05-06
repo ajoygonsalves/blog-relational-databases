@@ -3,18 +3,31 @@
 import { Blog } from "../models/blog";
 import { Request, Response } from "express";
 import { User } from "../models/user";
+import { Op } from "sequelize";
 interface RequestWithBlog extends Request {
   blog?: Blog;
   user?: User;
 }
 
 export const getBlogs = async (req: Request, res: Response) => {
+  const query = req.query;
+  console.log(query);
+
+  const where: { title?: { [Op.iLike]: string } } = {};
+
+  if (query.search) {
+    where.title = {
+      [Op.iLike]: `%${query.search}%`,
+    };
+  }
+
   const blogs = await Blog.findAll({
     include: {
       model: User,
       as: "user",
       attributes: ["name"],
     },
+    where,
   });
   res.json(blogs);
 };

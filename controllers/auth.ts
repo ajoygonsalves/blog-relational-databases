@@ -72,7 +72,7 @@ export const logIn = async (req: RequestAuth, res: Response) => {
     return;
   }
 
-  const user = await User.findOne({ where: { email } });
+  const user = await User.unscoped().findOne({ where: { email } });
 
   if (!user) {
     res.status(401).json({ message: "Invalid email or password" });
