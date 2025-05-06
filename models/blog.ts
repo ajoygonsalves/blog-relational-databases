@@ -7,6 +7,7 @@ export class Blog extends Model {
   url!: string;
   title!: string;
   likes!: number;
+  userId!: number;
 }
 
 Blog.init(
