@@ -13,12 +13,18 @@ export const getBlogs = async (req: Request, res: Response) => {
   const query = req.query;
   console.log(query);
 
-  const where: { title?: { [Op.iLike]: string } } = {};
+  const where: {
+    [Op.or]?: Array<{
+      title?: { [Op.iLike]: string };
+      author?: { [Op.iLike]: string };
+    }>;
+  } = {};
 
   if (query.search) {
-    where.title = {
-      [Op.iLike]: `%${query.search}%`,
-    };
+    where[Op.or] = [
+      { title: { [Op.iLike]: `%${query.search}%` } },
+      { author: { [Op.iLike]: `%${query.search}%` } },
+    ];
   }
 
   const blogs = await Blog.findAll({
