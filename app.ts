@@ -1,4 +1,5 @@
 import express from "express";
+import "./models/index";
 import blogsRouter from "./routes/blogs";
 import authRouter from "./routes/auth";
 import { PORT } from "./utils/config";

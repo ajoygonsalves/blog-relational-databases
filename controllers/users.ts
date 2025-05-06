@@ -1,12 +1,18 @@
 import { Request, Response } from "express";
 import { User } from "../models/user";
+import { Blog } from "../models/blog";
 
 interface AuthenticatedRequest extends Request {
   user?: { id: number };
 }
 
 export const getUsers = async (req: Request, res: Response) => {
-  const users = await User.findAll();
+  const users = await User.findAll({
+    include: {
+      model: Blog,
+      as: "blogs",
+    },
+  });
   res.json(users);
 };
 

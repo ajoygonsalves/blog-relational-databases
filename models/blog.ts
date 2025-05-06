@@ -45,5 +45,10 @@ Blog.init(
     tableName: "blogs",
     modelName: "Blog",
     timestamps: false,
+    defaultScope: {
+      attributes: {
+        exclude: ["userId", "id"],
+      },
+    },
   },
 );

@@ -38,6 +38,11 @@ User.init(
     tableName: "users",
     modelName: "User",
     timestamps: true,
+    defaultScope: {
+      attributes: {
+        exclude: ["passwordHash", "createdAt", "updatedAt", "id"],
+      },
+    },
   },
 );
 

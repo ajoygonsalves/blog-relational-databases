@@ -9,7 +9,13 @@ interface RequestWithBlog extends Request {
 }
 
 export const getBlogs = async (req: Request, res: Response) => {
-  const blogs = await Blog.findAll();
+  const blogs = await Blog.findAll({
+    include: {
+      model: User,
+      as: "user",
+      attributes: ["name"],
+    },
+  });
   res.json(blogs);
 };
 
