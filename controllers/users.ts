@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import { User } from "../models/user";
 import { Blog } from "../models/blog";
+import { sequelize } from "../utils/db";
 
 interface AuthenticatedRequest extends Request {
   user?: { id: number };
 }
 
 export const getUsers = async (req: Request, res: Response) => {
+  // also show total number of blogs per user
   const users = await User.findAll({
     include: {
       model: Blog,

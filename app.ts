@@ -6,6 +6,7 @@ import { PORT } from "./utils/config";
 import { errorHandler } from "./middleware/errorHandler";
 import usersRouter from "./routes/users";
 import { sequelize } from "./utils/db";
+import authorsRouter from "./routes/authors";
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use("/api/blogs", blogsRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/authors", authorsRouter);
 
 app.use(errorHandler);
 // Async startup block
