@@ -7,6 +7,7 @@ import { errorHandler } from "./middleware/errorHandler";
 import usersRouter from "./routes/users";
 import { sequelize } from "./utils/db";
 import authorsRouter from "./routes/authors";
+import { runMigrations } from "./utils/migrations";
 
 const app = express();
 app.use(express.json());
@@ -21,10 +22,8 @@ app.use(errorHandler);
 const start = async () => {
   try {
     await sequelize.authenticate();
+    await runMigrations();
     console.log("Database connection established ✅");
-
-    await sequelize.sync(); // Call only once, after associations
-    console.log("Models synchronized with the database ✅");
 
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
