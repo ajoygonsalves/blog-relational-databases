@@ -19,14 +19,30 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 export const getUserById = async (req: AuthenticatedRequest, res: Response) => {
-  const user = await User.findByPk(req.params.id);
+  const user = await User.findByPk(req.params.id, {
+    attributes: ["name", "email"],
+    include: [
+      {
+        model: Blog,
+        through: { attributes: [] }, // Exclude junction table attributes
+        attributes: ["id", "url", "title", "author", "likes"],
+      },
+    ],
+  });
 
   if (!user) {
     res.status(404).json({ message: "User not found" });
     return;
   }
 
-  res.json(user);
+  // Transform the response to match the required format
+  const response = {
+    name: user.name,
+    username: user.email,
+    readings: user.get("Blogs"),
+  };
+
+  res.json(response);
 };
 
 export const updateName = async (req: AuthenticatedRequest, res: Response) => {

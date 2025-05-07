@@ -1,6 +1,6 @@
 import { Blog } from "./blog";
 import { User } from "./user";
-
+import { ReadingList } from "./readingList";
 Blog.belongsTo(User, {
   foreignKey: "userId",
   as: "user",
@@ -11,4 +11,12 @@ User.hasMany(Blog, {
   as: "blogs",
 });
 
-export { Blog, User };
+User.belongsToMany(Blog, {
+  through: ReadingList,
+});
+
+Blog.belongsToMany(User, {
+  through: ReadingList,
+});
+
+export { Blog, User, ReadingList };
