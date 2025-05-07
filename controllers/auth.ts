@@ -3,6 +3,8 @@ import { User } from "../models/user";
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 import bcrypt from "bcrypt";
+import { Session } from "../models/session";
+import { AuthenticatedRequest } from "../middleware/authenticateRequests";
 
 config();
 
@@ -91,5 +93,21 @@ export const logIn = async (req: RequestAuth, res: Response) => {
     { expiresIn: "1h" },
   );
 
-  res.status(200).json({ token });
+  // Create session
+  await Session.create({
+    userId: user.id,
+    token,
+  });
+
+  res.status(200).json({ token, email: user.email });
+};
+
+export const logOut = async (req: AuthenticatedRequest, res: Response) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  await Session.destroy({
+    where: { token },
+  });
+
+  res.status(204).end();
 };

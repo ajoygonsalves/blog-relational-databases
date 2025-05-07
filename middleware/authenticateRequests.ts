@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { config } from "dotenv";
+import { Session } from "../models/session";
+import { User } from "../models/user";
 
 config();
 
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   user?: string | JwtPayload;
 }
 
@@ -24,8 +26,25 @@ export const authenticateRequests = async (
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    req.user = decoded; // attach to req
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      id: number;
+    };
+
+    // Check if session exists and user is not disabled
+    const session = await Session.findOne({
+      where: { token },
+      include: {
+        model: User,
+        attributes: ["disabled"],
+      },
+    });
+
+    if (!session || session.user?.disabled) {
+      res.status(401).json({ message: "Session expired or user disabled" });
+      return;
+    }
+
+    req.user = decoded;
     next();
   } catch (err) {
     res.status(401).json({ message: "Invalid or expired token" });

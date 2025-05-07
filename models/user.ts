@@ -6,6 +6,7 @@ class User extends Model {
   declare email: string;
   declare name: string | null;
   declare passwordHash: string;
+  declare disabled: boolean;
 }
 
 User.init(
@@ -30,6 +31,10 @@ User.init(
     passwordHash: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    disabled: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {

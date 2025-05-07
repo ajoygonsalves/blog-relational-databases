@@ -19,15 +19,23 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 export const getUserById = async (req: AuthenticatedRequest, res: Response) => {
+  const readStatus = req.query.read;
+
+  // Build the include options for reading list filtering
+  const includeOptions = {
+    model: Blog,
+    through: {
+      attributes: ["id", "read"],
+      as: "readinglists",
+      where:
+        readStatus !== undefined ? { read: readStatus === "true" } : undefined,
+    },
+    attributes: ["id", "url", "title", "author", "likes"],
+  };
+
   const user = await User.findByPk(req.params.id, {
     attributes: ["name", "email"],
-    include: [
-      {
-        model: Blog,
-        through: { attributes: [] }, // Exclude junction table attributes
-        attributes: ["id", "url", "title", "author", "likes"],
-      },
-    ],
+    include: [includeOptions],
   });
 
   if (!user) {

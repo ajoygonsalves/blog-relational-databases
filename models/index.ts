@@ -1,6 +1,7 @@
 import { Blog } from "./blog";
 import { User } from "./user";
 import { ReadingList } from "./readingList";
+import { Session } from "./session";
 Blog.belongsTo(User, {
   foreignKey: "userId",
   as: "user",
@@ -19,4 +20,9 @@ Blog.belongsToMany(User, {
   through: ReadingList,
 });
 
-export { Blog, User, ReadingList };
+Session.belongsTo(User, {
+  foreignKey: "userId",
+  as: "user",
+});
+
+export { Blog, User, ReadingList, Session };
